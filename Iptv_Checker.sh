@@ -323,8 +323,46 @@ show_summary() {
     fi
     
     echo ""
-    echo -e "${YELLOW}💡 Auto refresh will start in 3 seconds...${NC}"
-    sleep 3
+}
+
+# =====================================================
+# AFTER OPERATION MENU - Choose restart or back to menu
+# =====================================================
+
+after_operation_menu() {
+    echo ""
+    echo -e "${BLUE}╔══════════════════════════════════════════════════════════╗${NC}"
+    echo -e "${BLUE}║                    🎯 WHAT NOW? 🎯                        ║${NC}"
+    echo -e "${BLUE}╠══════════════════════════════════════════════════════════╣${NC}"
+    echo -e "${BLUE}║                                                          ║${NC}"
+    echo -e "${BLUE}║     ${GREEN}1${BLUE})  🔄 Restart Enigma2 GUI (Apply changes)        ║${NC}"
+    echo -e "${BLUE}║                                                          ║${NC}"
+    echo -e "${BLUE}║     ${GREEN}2${BLUE})  🔙 Return to Main Menu                       ║${NC}"
+    echo -e "${BLUE}║                                                          ║${NC}"
+    echo -e "${BLUE}╚══════════════════════════════════════════════════════════╝${NC}"
+    echo ""
+    
+    while true; do
+        echo -ne "${YELLOW}➤ Enter your choice [1-2]: ${NC}"
+        read -r AFTER_CHOICE
+        if [[ "$AFTER_CHOICE" == "1" || "$AFTER_CHOICE" == "2" ]]; then
+            break
+        else
+            echo -e "${RED}❌ Invalid choice! Please enter 1 or 2.${NC}"
+        fi
+    done
+    
+    if [ "$AFTER_CHOICE" == "1" ]; then
+        echo -e "${YELLOW}💡 Restarting Enigma2 GUI in 3 seconds...${NC}"
+        sleep 3
+        auto_refresh
+    else
+        echo -e "${GREEN}🔙 Returning to main menu...${NC}"
+        sleep 2
+        # Clean temporary files
+        rm -f "$TEMP_LINKS" "$WORKING_M3U" "$WORKING_MAC"
+        return 0
+    fi
 }
 
 # =====================================================
@@ -394,7 +432,7 @@ while true; do
             
             save_m3u_results
             show_summary
-            auto_refresh
+            after_operation_menu
             ;;
             
         2)
@@ -432,10 +470,11 @@ while true; do
             
             save_mac_results
             show_summary
-            auto_refresh
+            after_operation_menu
             ;;
     esac
-
+    
+    # Clean temporary files for next iteration
     rm -f "$TEMP_LINKS" "$WORKING_M3U" "$WORKING_MAC"
     
 done

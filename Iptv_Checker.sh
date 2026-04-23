@@ -145,7 +145,37 @@ check_mac() {
     fi
 }
 
-save_m3u_results() {
+# =====================================================
+# NEW FUNCTION: CHOOSE WHERE TO SAVE M3U LINKS
+# =====================================================
+
+choose_m3u_save_location() {
+    echo ""
+    echo -e "${BLUE}╔══════════════════════════════════════════════════════════╗${NC}"
+    echo -e "${BLUE}║           📂 WHERE TO SAVE M3U LINKS? 📂                  ║${NC}"
+    echo -e "${BLUE}╠══════════════════════════════════════════════════════════╣${NC}"
+    echo -e "${BLUE}║                                                          ║${NC}"
+    echo -e "${BLUE}║     ${GREEN}1${BLUE})  XKlass (${CYAN}$XKLASS_FILE${BLUE})${NC}"
+    echo -e "${BLUE}║                                                          ║${NC}"
+    echo -e "${BLUE}║     ${GREEN}2${BLUE})  X-Streamity (${CYAN}$XSTREAMITY_FILE${BLUE})${NC}"
+    echo -e "${BLUE}║                                                          ║${NC}"
+    echo -e "${BLUE}║     ${GREEN}3${BLUE})  BouquetMakerXtream (${CYAN}$BOUQUET_FILE${BLUE})${NC}"
+    echo -e "${BLUE}║                                                          ║${NC}"
+    echo -e "${BLUE}║     ${GREEN}4${BLUE})  ✅ Save to ALL plugins                       ║${NC}"
+    echo -e "${BLUE}║                                                          ║${NC}"
+    echo -e "${BLUE}╚══════════════════════════════════════════════════════════╝${NC}"
+    echo ""
+    
+    while true; do
+        echo -ne "${YELLOW}➤ Choose destination [1-4]: ${NC}"
+        read -r SAVE_CHOICE
+        if [[ "$SAVE_CHOICE" == "1" || "$SAVE_CHOICE" == "2" || "$SAVE_CHOICE" == "3" || "$SAVE_CHOICE" == "4" ]]; then
+            break
+        else
+            echo -e "${RED}❌ Invalid choice! Please enter 1, 2, 3, or 4.${NC}"
+        fi
+    done
+    
     echo ""
     echo -e "${BLUE}╔══════════════════════════════════════════════════════════╗${NC}"
     echo -e "${BLUE}║                 💾 SAVING TO PLUGINS 💾                    ║${NC}"
@@ -158,36 +188,73 @@ save_m3u_results() {
     fi
     
     local total_working=$(wc -l < $WORKING_M3U)
+    local saved_to=""
     
-    # Save to XKlass
-    echo -e "${CYAN}📝 Saving to XKlass:${NC} $XKLASS_FILE"
-    mkdir -p "$XKLASS_PATH"
-    if [ -f "$XKLASS_FILE" ] && [ -s "$XKLASS_FILE" ]; then
-        echo "" >> "$XKLASS_FILE"
-    fi
-    cat "$WORKING_M3U" >> "$XKLASS_FILE"
-    echo -e "${GREEN}   ✓ Saved $total_working M3U link(s) to XKlass${NC}"
-    
-    # Save to X-Streamity
-    echo -e "${CYAN}📝 Saving to X-Streamity:${NC} $XSTREAMITY_FILE"
-    mkdir -p "$XSTREAMITY_PATH"
-    if [ -f "$XSTREAMITY_FILE" ] && [ -s "$XSTREAMITY_FILE" ]; then
-        echo "" >> "$XSTREAMITY_FILE"
-    fi
-    cat "$WORKING_M3U" >> "$XSTREAMITY_FILE"
-    echo -e "${GREEN}   ✓ Saved $total_working M3U link(s) to X-Streamity${NC}"
-    
-    # Save to BouquetMakerXtream
-    echo -e "${CYAN}📝 Saving to BouquetMakerXtream:${NC} $BOUQUET_FILE"
-    mkdir -p "$BOUQUET_PATH"
-    if [ -f "$BOUQUET_FILE" ] && [ -s "$BOUQUET_FILE" ]; then
-        echo "" >> "$BOUQUET_FILE"
-    fi
-    cat "$WORKING_M3U" >> "$BOUQUET_FILE"
-    echo -e "${GREEN}   ✓ Saved $total_working M3U link(s) to BouquetMakerXtream${NC}"
+    case $SAVE_CHOICE in
+        1)
+            # Save to XKlass only
+            echo -e "${CYAN}📝 Saving to XKlass:${NC} $XKLASS_FILE"
+            mkdir -p "$XKLASS_PATH"
+            if [ -f "$XKLASS_FILE" ] && [ -s "$XKLASS_FILE" ]; then
+                echo "" >> "$XKLASS_FILE"
+            fi
+            cat "$WORKING_M3U" >> "$XKLASS_FILE"
+            echo -e "${GREEN}   ✓ Saved $total_working M3U link(s) to XKlass${NC}"
+            saved_to="XKlass"
+            ;;
+        2)
+            # Save to X-Streamity only
+            echo -e "${CYAN}📝 Saving to X-Streamity:${NC} $XSTREAMITY_FILE"
+            mkdir -p "$XSTREAMITY_PATH"
+            if [ -f "$XSTREAMITY_FILE" ] && [ -s "$XSTREAMITY_FILE" ]; then
+                echo "" >> "$XSTREAMITY_FILE"
+            fi
+            cat "$WORKING_M3U" >> "$XSTREAMITY_FILE"
+            echo -e "${GREEN}   ✓ Saved $total_working M3U link(s) to X-Streamity${NC}"
+            saved_to="X-Streamity"
+            ;;
+        3)
+            # Save to BouquetMakerXtream only
+            echo -e "${CYAN}📝 Saving to BouquetMakerXtream:${NC} $BOUQUET_FILE"
+            mkdir -p "$BOUQUET_PATH"
+            if [ -f "$BOUQUET_FILE" ] && [ -s "$BOUQUET_FILE" ]; then
+                echo "" >> "$BOUQUET_FILE"
+            fi
+            cat "$WORKING_M3U" >> "$BOUQUET_FILE"
+            echo -e "${GREEN}   ✓ Saved $total_working M3U link(s) to BouquetMakerXtream${NC}"
+            saved_to="BouquetMakerXtream"
+            ;;
+        4)
+            # Save to ALL plugins
+            echo -e "${CYAN}📝 Saving to XKlass:${NC} $XKLASS_FILE"
+            mkdir -p "$XKLASS_PATH"
+            if [ -f "$XKLASS_FILE" ] && [ -s "$XKLASS_FILE" ]; then
+                echo "" >> "$XKLASS_FILE"
+            fi
+            cat "$WORKING_M3U" >> "$XKLASS_FILE"
+            echo -e "${GREEN}   ✓ Saved $total_working M3U link(s) to XKlass${NC}"
+            
+            echo -e "${CYAN}📝 Saving to X-Streamity:${NC} $XSTREAMITY_FILE"
+            mkdir -p "$XSTREAMITY_PATH"
+            if [ -f "$XSTREAMITY_FILE" ] && [ -s "$XSTREAMITY_FILE" ]; then
+                echo "" >> "$XSTREAMITY_FILE"
+            fi
+            cat "$WORKING_M3U" >> "$XSTREAMITY_FILE"
+            echo -e "${GREEN}   ✓ Saved $total_working M3U link(s) to X-Streamity${NC}"
+            
+            echo -e "${CYAN}📝 Saving to BouquetMakerXtream:${NC} $BOUQUET_FILE"
+            mkdir -p "$BOUQUET_PATH"
+            if [ -f "$BOUQUET_FILE" ] && [ -s "$BOUQUET_FILE" ]; then
+                echo "" >> "$BOUQUET_FILE"
+            fi
+            cat "$WORKING_M3U" >> "$BOUQUET_FILE"
+            echo -e "${GREEN}   ✓ Saved $total_working M3U link(s) to BouquetMakerXtream${NC}"
+            saved_to="ALL plugins"
+            ;;
+    esac
     
     echo ""
-    echo -e "${GREEN}✅ M3U results saved successfully!${NC}"
+    echo -e "${GREEN}✅ M3U results saved successfully to $saved_to!${NC}"
 }
 
 save_mac_results() {
@@ -308,11 +375,6 @@ show_summary() {
         echo -e "${CYAN}📊 M3U Check Results:${NC}"
         echo -e "   Total checked: $TOTAL"
         echo -e "   Working: ${GREEN}$WORKING${NC}"
-        echo ""
-        echo -e "${CYAN}📁 Saved to:${NC}"
-        echo -e "   ${GREEN}✓${NC} $XKLASS_FILE"
-        echo -e "   ${GREEN}✓${NC} $XSTREAMITY_FILE"
-        echo -e "   ${GREEN}✓${NC} $BOUQUET_FILE"
     else
         echo -e "${CYAN}📊 MAC Portal Check Results:${NC}"
         echo -e "   Total checked: $TOTAL"
@@ -379,7 +441,7 @@ while true; do
     echo -e "${CYAN}╠══════════════════════════════════════════════════════════╣${NC}"
     echo -e "${CYAN}║                                                          ║${NC}"
     echo -e "${CYAN}║     ${GREEN}1${CYAN})  M3U Links (Xtream Codes)                       ║${NC}"
-    echo -e "${CYAN}║        → Saves to: XKlass + X-Streamity + BMX          ║${NC}"
+    echo -e "${CYAN}║        → You choose where to save (XKlass/X-Streamity/BMX)${NC}"
     echo -e "${CYAN}║                                                          ║${NC}"
     echo -e "${CYAN}║     ${GREEN}2${CYAN})  MAC Portal (Stalker)                         ║${NC}"
     echo -e "${CYAN}║        → Saves to: EStalker ONLY (e-portals.txt)        ║${NC}"
@@ -430,7 +492,12 @@ while true; do
                 sleep 0.5
             done < "$TEMP_LINKS"
             
-            save_m3u_results
+            if [ $WORKING -gt 0 ]; then
+                choose_m3u_save_location
+            else
+                echo -e "${RED}❌ No working M3U links found to save!${NC}"
+            fi
+            
             show_summary
             after_operation_menu
             ;;
@@ -468,7 +535,12 @@ while true; do
                 sleep 0.5
             done < "$TEMP_LINKS"
             
-            save_mac_results
+            if [ $WORKING -gt 0 ]; then
+                save_mac_results
+            else
+                echo -e "${RED}❌ No working MAC portals found to save!${NC}"
+            fi
+            
             show_summary
             after_operation_menu
             ;;

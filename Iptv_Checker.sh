@@ -5,6 +5,18 @@
 # Automatically refreshes all plugins after saving
 # =====================================================
 
+#                 ╔═══════════════════════════════════════════════╗
+#                 ║         W O R L D   O F   E N I G M A 2       ║
+#                 ║                  IPTV CHECKER v13.0           ║
+#                 ║            AUTO REFRESH + MULTI PLUGIN        ║
+#                 ╚═══════════════════════════════════════════════╝
+#
+#                 ╔═══════════════════════════════════════════════╗
+#                 ║     🙏 SPECIAL THANKS TO 🙏                    ║
+#                 ║        SAID MEBROUR SOBHI                      ║
+#                 ║          FOR THE IDEA 💡                       ║
+#                 ╚═══════════════════════════════════════════════╝
+
 RED='\033[0;31m'
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
@@ -45,6 +57,8 @@ show_banner() {
     echo -e "${BLUE}║     ${CYAN}IPTV Server Checker v13.0 - WITH AUTO REFRESH${BLUE}               ║${NC}"
     echo -e "${BLUE}║       ${GREEN}(Auto refresh plugins after saving)${BLUE}                      ║${NC}"
     echo -e "${BLUE}╚══════════════════════════════════════════════════════════╝${NC}"
+    echo ""
+    echo -e "${CYAN}🙏 Special Thanks to: ${GREEN}SAID MEBROUR SOBHI${CYAN} for the idea 💡${NC}"
     echo ""
 }
 
